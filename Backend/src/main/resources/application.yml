@@ -1,0 +1,23 @@
+spring:
+  application:
+    name:   student-contact-manager
+
+  #   mysql configuration
+
+  datasource:
+    url:    jdbc:mysql://localhost:3306/scm
+    username:   root
+    password:   2122
+
+  #   JPA configuration for the showing the sql commands on the console
+  jpa:
+    show-sql: true
+
+    #   this configuration is for the creating the tables and schema to the tables automatically
+    hibernate:
+      ddl-auto: update
+
+    # this configuration is for the mysql enabling tables and schema
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
