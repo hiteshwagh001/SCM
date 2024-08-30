@@ -1,6 +1,6 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
-import axios from 'axios';
 import Button from '../fragments/Button';
 import Input from '../fragments/Input';
 
@@ -15,7 +15,7 @@ function Loginform() {
       const response = await axios.post('http://localhost:8080/api/login', data);
       if (response.status >= 200 && response.status < 300) {
         // Reset form after successful submission
-        console.log(response)
+        console.log(response.data)
         reset();
         setFocus("email");
         // Additional success handling (e.g., redirecting)
