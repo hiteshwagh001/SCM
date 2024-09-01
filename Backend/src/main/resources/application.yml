@@ -18,6 +18,6 @@ spring:
       ddl-auto: update
 
     # this configuration is for the mysql enabling tables and schema
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect
