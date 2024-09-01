@@ -1,8 +1,8 @@
-import React, { useId } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from '../../assets/logo.png';
 import ThemeToggleButton from "../fragments/ThemeToggleButton";
+import useThemeClass from '../ThemeClass'
 
 const nav__links = [
   {
@@ -25,12 +25,13 @@ const nav__links = [
 
 export default function Header() {
   const navigate = useNavigate();
-  const theme = useSelector((state) => state.theme.theme);
+  // const theme = useSelector((state) => state.theme.theme);
+  const themeClass=useThemeClass();
 
   return (
     <header className={`shadow`}>
       <nav
-        className={`border-gray-200 ${theme === 'light' ? 'bg-lightBg text-darkText' : 'bg-darkBg text-lightText'}`}>
+        className={`border-gray-200 ${themeClass}`}>
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <div className="flex items-center space-x-3 rtl:space-x-reverse" onClick={() => navigate("/")}>
             <img src={logo} className="h-8" alt="Flowbite Logo" />
@@ -70,7 +71,7 @@ export default function Header() {
 
           {/* Navigation Menu */}
           <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-            <ul className={`flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ${theme === 'light' ? 'bg-lightBg text-darkText' : 'bg-darkBg text-lightText'}`}>
+            <ul className={`flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 `}>
               {nav__links.map((item, index) => (
                 <li key={index}>
                   <NavLink

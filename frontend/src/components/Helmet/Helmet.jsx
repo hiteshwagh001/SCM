@@ -1,14 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import useThemeClass from "../ThemeClass";
 
 const Helmet = (props) => {
-  const theme = useSelector(state => state.theme.theme)
+  const themeClass=useThemeClass()
 
   document.title = "SCM - " + props.title;
   return <div className={`
     h-screen m-auto
-    ${theme === 'light' ? 'bg-lightBg text-lightText' : 'bg-darkBg text-darkText'}
-    `}>
+    ${themeClass}`}>
     {props.children}
   </div>;
 };
