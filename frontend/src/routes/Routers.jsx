@@ -1,17 +1,17 @@
 import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "../pages/login";
+import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
+import Login from "../pages/login";
 import NotFound from "../pages/NotFound";
-
-
+import Signup from "../pages/Signup";
 
 const Routers = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/" />} />
+      {/* <Route path="/" element={<Navigate to="/" />} /> */}
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login/>}/>
-      <Route path="/home" element={<Home />} />
+      <Route path="/signup" element={<Signup/>}/>
       <Route path="/home" element={<Home />} />
       <Route path="*" element={<NotFound />} />
 
