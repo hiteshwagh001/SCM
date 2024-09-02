@@ -10,7 +10,7 @@ const ThemeToggleButton = () => {
     const dispatch = useDispatch();
     const theme = useSelector((state) => state.theme.theme);
 
-    const icon = theme === 'light' ? <MdDarkMode className='text-black'/>    : <CiLight className='text-white '/>;
+    const icon = theme === 'light' ? <CiLight className='text-black '/>    :  <MdDarkMode className='text-gray-400'/>;
     const className = theme === 'light' ? 'p-4 text-2xl ' : 'p-4 text-2xl ';
 
     return (

@@ -23,14 +23,14 @@ public class User {
     private String userName;
 
     @Column(unique = true, nullable = false)
-    private String Email;
+    private String email;
     private String password;
 
     @Column(columnDefinition = "TEXT")
     private String about;
 
-    @Column(length = 10000)
-    private String profilePic;
+    @Column(name = "profile_pic", columnDefinition = "TEXT")
+    private String profilePic = "https://example.com/default_profile_pic.jpg";
 
     @Column(length = 10)
     private long phoneNumber;
@@ -40,10 +40,13 @@ public class User {
     private boolean emailVerified = false;
     private boolean phoneVerified = false;
 
-    //    provider like self, google, github etc
-    private Providers provider = Providers.SELF;
-    private String providerUserId;
 
+    //    provider like self, google, github etc
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "provider")
+    private Providers provider = Providers.SELF;
+
+    private String providerUserId;
 
     //    contacts details
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
