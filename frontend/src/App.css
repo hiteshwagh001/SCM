@@ -1,0 +1,13 @@
+/* src/App.css */
+.custom-toast {
+    background-color: #28a745;
+    /* Green color for success */
+    color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.Toastify__toast--success {
+    background-color: #28a745;
+}
