@@ -1,79 +1,107 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { showErrorToast, showSuccessToast } from '../ToastNotification';
 import Button from '../fragments/Button';
 import Input from '../fragments/Input';
 
-function Loginform() {
-  const { register, handleSubmit, reset, setFocus, formState: { errors } } = useForm();
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(null);
 
-  const login = async (data) => {
+function LoginForm() {
+  const { register, handleSubmit, reset, setFocus, setError, formState: { errors } } = useForm();
+  const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
     try {
-      setSubmitting(true);
-      const response = await axios.post('http://localhost:8080/api/login', data);
-      if (response.status >= 200 && response.status < 300) {
-        // Reset form after successful submission
-        console.log(response.data)
-        reset();
-        setFocus("email");
-        // Additional success handling (e.g., redirecting)
-      } else {
-        setError("Invalid email or password");
+      setSubmitting(true); // Show loading state
+      const response = await axios.post('http://localhost:8080/auth/signin', data);
+
+      // Handle success response
+      if (response.status === 200) {
+        showSuccessToast("Login successful!");
+        const { token } = response.data;
+        localStorage.setItem('authToken', token);
+        navigate('/');
       }
     } catch (error) {
-      setError("Error submitting form");
+      // Handle cases based on error status code
       if (error.response) {
-        setError(error.response.data);
-      } else if (error.request) {
-        setError("No response received");
+        const { status } = error.response;
+
+        // Handle 401 Unauthorized (Invalid credentials)
+        if (status === 401) {
+          setError("username", { type: 'manual', message: "Invalid credentials" });
+          setError("password", { type: 'manual', message: "Invalid credentials" });
+          showErrorToast("Invalid username or password.");
+        }
+        // Handle 403 Forbidden (User is disabled or not allowed to login)
+        else if (status === 403) {
+          showErrorToast("Account is disabled or forbidden access.");
+        }
+        // Handle 500 Internal Server Error (Server-side issue)
+        else if (status === 500) {
+          showErrorToast("Server error. Please try again later.");
+        }
+        // Handle other response errors
+        else {
+          showErrorToast("An unexpected error occurred. Status code: " + status);
+        }
       } else {
-        setError(error.message);
+        // Handle errors not related to the server response (e.g., network errors)
+        showErrorToast("Network error: " + error.message);
       }
     } finally {
+      // Reset submitting state and focus on the username field
       setSubmitting(false);
+      setTimeout(() => setFocus("username"), 100); // Set focus after slight delay
     }
   };
 
   useEffect(() => {
-    setFocus("email");
+    // Use timeout to ensure the component is fully loaded before setting focus
+    setTimeout(() => setFocus("username"), 100);
   }, [setFocus]);
 
   return (
-    <form onSubmit={handleSubmit(login)} noValidate className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-      <div className="mb-4">
-        <Input
-          label="Email"
-          placeholder="Enter your email"
-          type="email"
-          {...register("email", {
-            required: "Email is required",
-            validate: {
-              matchPattern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || "Email address must be a valid address",
-            }
-          })}
-        />
-        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+    <>
+      <div className="max-w-md mx-auto p-6 border-t-8 pt-6 shadow-md">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <h2 className="text-2xl font-bold mb-2">Login</h2>
+          <div className="mb-4">
+            <Input
+              id="username"
+              label="Username"
+              placeholder="Enter Username"
+              name="username"
+              type="text"
+              place
+              {...register('username', { required: 'Username is required' })}
+              className="border p-2 w-full"
+            />
+            {errors.username && <span className="text-red-500">{errors.username.message}</span>}
+          </div>
+          <div className="mb-4">
+            <Input
+              id="password"
+              placeholder="Enter Password"
+              label="Password"
+              name="password"
+              type="password"
+              {...register('password', { required: 'Password is required' })}
+              className="border p-2 w-full"
+            />
+            {errors.password && <span className="text-red-500">{errors.password.message}</span>}
+          </div>
+          <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg" disabled={submitting}>
+            {submitting ? "logging in..." : "Login"}
+          </Button>
+        </form>
       </div>
-      <div className="mb-6">
-        <Input
-          label="Password"
-          placeholder="Enter your password"
-          type="password"
-          {...register("password", {
-            required: "Password is required",
-          })}
-        />
-        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
-      </div>
-      <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg" disabled={submitting}>
-        {submitting ? "Submitting..." : "Sign in"}
-      </Button>
-    </form>
+      <ToastContainer position='top-right' />
+    </>
   );
 }
 
-export default Loginform
+export default LoginForm;

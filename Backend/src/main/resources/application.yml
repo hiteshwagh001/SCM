@@ -21,3 +21,10 @@ spring:
 #    properties:
 #      hibernate:
 #        dialect: org.hibernate.dialect.MySQLDialect
+
+jwt:
+  jwtSecret: "hsdfjsdkfjkllsddfsskflksdkdfkdfksd73532889fadsfdslk"
+  jwtExpirationMs: 360000
+  
+frontend:
+    url: http://localhost:5173

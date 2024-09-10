@@ -9,9 +9,8 @@ import useThemeClass from '../ThemeClass';
 import { showErrorToast, showSuccessToast } from '../ToastNotification';
 
 function SignupForm() {
-  const { register, handleSubmit, reset, setFocus, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, setFocus, setError, formState: { errors } } = useForm();
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(null);
   const themeClass = useThemeClass();
 
   const signup = async (data) => {
@@ -22,31 +21,39 @@ function SignupForm() {
           'Content-Type': 'application/json'
         }
       });
-
+      console.log(response);
       if (response.status === 200) {
         showSuccessToast(response.data.message || 'Account created successfully!');
+        reset();
       } else {
         showErrorToast(response.data.message || 'An error occurred during signup.');
       }
-
-      reset();
-      setFocus("userName");
     } catch (error) {
-      if (error.response) {
-        setError(error.response.data.message || 'An error occurred during signup.');
-        showErrorToast(error.response.data.message || 'An error occurred during signup.');
+      if (error.response && error.response.status === 400) {
+        const errorData = error.response.data;
+
+        // Display each field-specific error
+        for (const [field, message] of Object.entries(errorData)) {
+          if (field !== 'message') {
+            setError(field, { type: 'manual', message });
+          }
+        }
+        showErrorToast(errorData.message || "Please correct the errors in the form.");
+      } else if (error.response && error.response.status === 409) {
+        // Handle specific conflict errors (e.g., duplicate email)
+        const errorData = error.response.data;
+        setError('email', { type: 'manual', message: errorData.email });
+        showErrorToast(errorData.email || "An account with this email already exists.");
       } else if (error.request) {
-        setError("No response received");
-        showErrorToast("No response received");
+        showErrorToast("No response received from the server.");
       } else {
-        setError(error.message);
-        showErrorToast(error.message);
+        showErrorToast("An error occurred: " + error.message);
       }
     } finally {
       setSubmitting(false);
+      setFocus("userName");
     }
   };
-
   useEffect(() => {
     setFocus("userName");
   }, [setFocus]);
@@ -57,13 +64,11 @@ function SignupForm() {
         <form onSubmit={handleSubmit(signup)} noValidate >
           <h2 className="text-2xl font-bold mb-2">Sign Up</h2>
           <p className='mb-6'>Managing contacts on cloud ....</p>
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           <div className="mb-4">
             <Input
               label="UserName"
               placeholder="Enter your userName"
               type="text"
-              name="userName"
               {...register("userName", {
                 required: "UserName is required",
               })}
@@ -119,7 +124,7 @@ function SignupForm() {
                 required: "Please tell us something about yourself",
               })}
             />
-            {errors.aboutYou && <p className="text-red-500 text-sm mt-1">{errors.aboutYou.message}</p>}
+            {errors.about && <p className="text-red-500 text-sm mt-1">{errors.about.message}</p>}
           </div>
           <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg" disabled={submitting}>
             {submitting ? "Signing up..." : "Sign Up"}

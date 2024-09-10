@@ -1,4 +1,4 @@
-package com.scm.entity;
+package com.scm.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

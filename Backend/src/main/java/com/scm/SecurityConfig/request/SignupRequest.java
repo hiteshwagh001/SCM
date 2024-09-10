@@ -1,26 +1,21 @@
-package com.scm.forms;
+package com.scm.SecurityConfig.request;
+
+import java.util.Set;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@ToString
-public class UserForm {
+public class SignupRequest {
 
-   
     @NotBlank(message = "Username is required!!!")
-    @Size(min = 3, message = "Min 3 characters required!!")
+    @Size(min = 3, max = 20, message = "Min 3 characters required!!")
     private String userName;
 
     @NotBlank(message = "Phone number is required")
@@ -29,6 +24,7 @@ public class UserForm {
 
     @NotEmpty(message = "Email is required")
     @Email(message = "Invalid Email address!!")
+    @Size(max = 50)
     private String email;
 
     @Size(min = 8, message = "Password must be at least 8 characters")
@@ -37,4 +33,9 @@ public class UserForm {
 
     @NotBlank(message = "About can not be null!!")
     private String about;
+
+    @Setter
+    @Getter
+    private Set<String> role;
+
 }

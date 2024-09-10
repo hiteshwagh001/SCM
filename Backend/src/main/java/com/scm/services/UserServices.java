@@ -1,6 +1,8 @@
 package com.scm.services;
 
-import com.scm.entity.User;
+import com.scm.forms.LoginForm;
+import com.scm.model.User;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,5 +24,8 @@ public interface UserServices {
     boolean isUserExistByEmail(String email);
 
     Optional<List<User>> getAllUser();
+
+    boolean login(LoginForm loginForm);
+
 
 }
