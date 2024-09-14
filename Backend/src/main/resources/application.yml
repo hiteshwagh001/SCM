@@ -1,13 +1,13 @@
 spring:
   application:
-    name:   student-contact-manager
+    name: student-contact-manager
 
   #   mysql configuration
 
   datasource:
-    url:    jdbc:mysql://localhost:3306/scm
-    username:   root
-    password:   2122
+    url: jdbc:mysql://localhost:3306/scm
+    username: root
+    password: 2122
 
   #   JPA configuration for the showing the sql commands on the console
   jpa:
@@ -22,9 +22,33 @@ spring:
 #      hibernate:
 #        dialect: org.hibernate.dialect.MySQLDialect
 
+  # security:
+  #   oauth2:
+  #       client:
+  #         registration:
+  #           google:
+  #             client-id: 1039469122380-e5mbmkbujjbfulue5hiln2prp012cqeq.apps.googleusercontent.com
+  #             client-secret: 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
+  #             scope: profile,email
+
+  #           github:
+  #             client-id: Ov23li2EQ0Yrfqcxsb7Q
+  #             client-secret: 30eb1fdc0d366e5afd6cb8a42ccfe8582face7b1
+  #             scope: read:user,user:email
+
+
+#      jwt configuration
 jwt:
-  jwtSecret: "hsdfjsdkfjkllsddfsskflksdkdfkdfksd73532889fadsfdslk"
+  jwtSecret: hsdfjsdkfjkllsddfsskflksdksdfdfsfjaskdfjkjfkjkfddfkdfksd
   jwtExpirationMs: 360000
-  
+
 frontend:
-    url: http://localhost:5173
+  url: http://localhost:5173
+
+  # oauth2 configuration
+
+
+# google:
+#   client-name: google
+#   client-id: 1090443459743-utfkjp8ju21mpbghfj05ve0l8ds2uvoq.apps.googleusercontent.com
+#   client-secrete: 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

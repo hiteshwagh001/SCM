@@ -1,5 +1,4 @@
 // src/components/ThemeToggleButton.js
-import React from 'react';
 import { CiLight } from "react-icons/ci";
 import { MdDarkMode } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';

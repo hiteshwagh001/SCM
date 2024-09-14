@@ -1,17 +1,18 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { showErrorToast, showSuccessToast } from '../ToastNotification';
 import Button from '../fragments/Button';
 import Input from '../fragments/Input';
-
+import useThemeClass from '../ThemeClass';
+import { showErrorToast, showSuccessToast } from '../ToastNotification';
 
 function LoginForm() {
-  const { register, handleSubmit, reset, setFocus, setError, formState: { errors } } = useForm();
+  const { register, handleSubmit,setFocus, setError, formState: { errors } } = useForm();
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const themeClass = useThemeClass();
 
   const onSubmit = async (data) => {
     try {
@@ -21,9 +22,9 @@ function LoginForm() {
       // Handle success response
       if (response.status === 200) {
         showSuccessToast("Login successful!");
-        const { token } = response.data;
-        localStorage.setItem('authToken', token);
-        navigate('/');
+        const { jwtToken } = response.data;
+        localStorage.setItem('authToken', jwtToken);
+        navigate('/dashboard');
       }
     } catch (error) {
       // Handle cases based on error status code
@@ -66,9 +67,10 @@ function LoginForm() {
 
   return (
     <>
-      <div className="max-w-md mx-auto p-6 border-t-8 pt-6 shadow-md">
+      <div className={`max-w-md mx-auto p-6 ${themeClass} border-t-8 pt-6 shadow-md`}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <h2 className="text-2xl font-bold mb-2">Login</h2>
+          <h2 className="text-2xl font-bold mb-2">Login Here</h2>
+          <p className='mb-6'>Managing contacts on cloud ....</p>
           <div className="mb-4">
             <Input
               id="username"

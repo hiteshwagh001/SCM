@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { ToastContainer } from 'react-toastify';
@@ -7,6 +7,7 @@ import Button from '../fragments/Button';
 import Input from '../fragments/Input';
 import useThemeClass from '../ThemeClass';
 import { showErrorToast, showSuccessToast } from '../ToastNotification';
+import {githubLogin,googleLogin} from '../Oauth2'
 
 function SignupForm() {
   const { register, handleSubmit, reset, setFocus, setError, formState: { errors } } = useForm();
@@ -16,7 +17,7 @@ function SignupForm() {
   const signup = async (data) => {
     try {
       setSubmitting(true);
-      const response = await axios.post('http://localhost:8080/api/signup', data, {
+      const response = await axios.post('http://localhost:8080/auth/signup', data, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -131,11 +132,11 @@ function SignupForm() {
           </Button>
         </form>
         <div className="flex justify-between mt-4">
-          <Button className="w-full bg-gray-800 hover:bg-gray-900 text-white py-2 rounded-lg flex items-center justify-center space-x-2 mr-2">
+          <Button onClick={githubLogin} className="w-full bg-gray-800 hover:bg-gray-900 text-white py-2 rounded-lg flex items-center justify-center space-x-2 mr-2">
             <FaGithub size={20} />
             <span>Sign up with GitHub</span>
           </Button>
-          <Button className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg flex items-center justify-center space-x-2 ml-2">
+          <Button onClick={googleLogin} className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg flex items-center justify-center space-x-2 ml-2">
             <FaGoogle size={20} />
             <span>Sign up with Google</span>
           </Button>

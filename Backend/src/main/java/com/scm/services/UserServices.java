@@ -1,12 +1,12 @@
 package com.scm.services;
 
-import com.scm.forms.LoginForm;
-import com.scm.model.User;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.scm.forms.LoginForm;
+import com.scm.model.User;
 
 @Service
 public interface UserServices {
@@ -26,6 +26,10 @@ public interface UserServices {
     Optional<List<User>> getAllUser();
 
     boolean login(LoginForm loginForm);
+
+    Optional<User> findByEmail(String email);
+
+    public void registerUser(User newUser);
 
 
 }

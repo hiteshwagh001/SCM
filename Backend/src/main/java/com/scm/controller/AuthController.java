@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -126,4 +127,20 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getprofile(){
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        UserDetails user= (UserDetails) authentication.getPrincipal();
+
+        Map<String,Object> profile=new HashMap<>();
+        profile.put("username",user.getUsername());
+        profile.put("roles",user.getAuthorities().stream().map(item->item.getAuthority()).collect(Collectors.toList()));
+        profile.put("message","this is the message from backend");
+
+        return ResponseEntity.ok(user);
+
+    }
+
+
 }

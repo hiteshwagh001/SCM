@@ -119,4 +119,15 @@ public class UserServiceImpl implements UserServices {
             return false;
         }
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepo.findByEmail(email);
+    }
+
+    @Override
+    public void registerUser(User newUser) {
+        userRepo.save(newUser);
+    }
+
 }

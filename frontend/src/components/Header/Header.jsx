@@ -1,8 +1,7 @@
-import React from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from '../../assets/logo.png';
 import ThemeToggleButton from "../fragments/ThemeToggleButton";
-import useThemeClass from '../ThemeClass'
+import useThemeClass from '../ThemeClass';
 
 const nav__links = [
   {
@@ -24,6 +23,7 @@ const nav__links = [
 ];
 
 export default function Header() {
+
   const navigate = useNavigate();
   // const theme = useSelector((state) => state.theme.theme);
   const themeClass=useThemeClass();
