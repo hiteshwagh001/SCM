@@ -15,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +27,11 @@ import com.scm.SecurityConfig.request.LoginRequest;
 import com.scm.SecurityConfig.request.SignupRequest;
 import com.scm.SecurityConfig.response.LoginResponse;
 import com.scm.SecurityConfig.services.UserDetailsImpl;
+import com.scm.dto.UserDTO;
 import com.scm.exception.MessageResponse;
+import com.scm.helper.AuthenticatedUserService;
 import com.scm.model.AppRole;
+import com.scm.model.Providers;
 import com.scm.model.Role;
 import com.scm.model.User;
 import com.scm.repositories.RoleRepo;
@@ -55,6 +57,9 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticatedUserService authenticatedUserService;
 
     @GetMapping("/hi")
     public String postMethodName() {
@@ -92,9 +97,10 @@ public class AuthController {
         }
         user.setUserId(UUID.randomUUID().toString());
         user.setAbout(signupRequest.getAbout());
-        user.setPhoneNumber(Integer.parseInt(signupRequest.getPhoneNumber()));
+        user.setPhoneNumber(signupRequest.getPhoneNumber());
         user.setRole(role);
         userRepo.save(user);
+        user.setProvider(Providers.SELF);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
@@ -129,18 +135,33 @@ public class AuthController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getprofile(){
-        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
-        UserDetails user= (UserDetails) authentication.getPrincipal();
+    public ResponseEntity<?> getProfile() {
+        try {
 
-        Map<String,Object> profile=new HashMap<>();
-        profile.put("username",user.getUsername());
-        profile.put("roles",user.getAuthorities().stream().map(item->item.getAuthority()).collect(Collectors.toList()));
-        profile.put("message","this is the message from backend");
-
-        return ResponseEntity.ok(user);
-
+            User user = authenticatedUserService.getAuthenticatedUser();
+            UserDTO userDTO = mapUserToDTO(user);
+            return ResponseEntity.ok(userDTO);
+        } catch (Exception e) {
+            String exceptionType = e.getClass().getSimpleName();
+            System.out.println("exception type is ------------> "+exceptionType);
+            return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-
+    // Corrected method to map User entity to UserDTO
+    private UserDTO mapUserToDTO(User user) {
+        return UserDTO.builder()
+                .userId(user.getUserId())
+                .username(user.getUserName())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber() + "")
+                .about(user.getAbout())
+                .profilePicture(user.getProfilePic())
+                .enabled(user.isEnabled())
+                .emailVerified(user.isEmailVerified())
+                .phoneVerified(user.isPhoneVerified())
+                .role(user.getRole())
+                .createdDate(user.getCreatedDate())
+                .build();
+    }
 }

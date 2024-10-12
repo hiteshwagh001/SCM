@@ -11,3 +11,12 @@
 .Toastify__toast--success {
     background-color: #28a745;
 }
+
+.light {
+    background-image: linear-gradient(to right, #e0eafc, #cfdef3);
+}
+
+.dark {
+    background-image: linear-gradient(to right, #1e293b, #0f172a);
+    /* From slate-800 to slate-900 */
+}

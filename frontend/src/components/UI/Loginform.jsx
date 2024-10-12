@@ -5,14 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import Button from '../fragments/Button';
 import Input from '../fragments/Input';
-import useThemeClass from '../ThemeClass';
 import { showErrorToast, showSuccessToast } from '../ToastNotification';
+
 
 function LoginForm() {
   const { register, handleSubmit,setFocus, setError, formState: { errors } } = useForm();
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
-  const themeClass = useThemeClass();
 
   const onSubmit = async (data) => {
     try {
@@ -24,7 +23,7 @@ function LoginForm() {
         showSuccessToast("Login successful!");
         const { jwtToken } = response.data;
         localStorage.setItem('authToken', jwtToken);
-        navigate('/dashboard');
+        navigate('/user/dashboard');
       }
     } catch (error) {
       // Handle cases based on error status code
@@ -67,7 +66,7 @@ function LoginForm() {
 
   return (
     <>
-      <div className={`max-w-md mx-auto p-6 ${themeClass} border-t-8 pt-6 shadow-md`}>
+      <div className={`max-w-md mx-auto p-6 dark:bg-gradient-to-r from-slate-800 to-slate-900 text-white border-t-8 pt-6 shadow-md`}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2 className="text-2xl font-bold mb-2">Login Here</h2>
           <p className='mb-6'>Managing contacts on cloud ....</p>

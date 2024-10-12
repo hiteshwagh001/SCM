@@ -61,7 +61,7 @@ public class PageController {
 
             User user = new User();
             user.setUserName(userForm.getUserName());
-            user.setPhoneNumber(Long.parseLong(userForm.getPhoneNumber())); // Assuming phoneNumber is a Long
+            user.setPhoneNumber(userForm.getPhoneNumber()); // Assuming phoneNumber is a Long
             user.setEmail(userForm.getEmail());
             user.setPassword(userForm.getPassword());
             user.setAbout(userForm.getAbout());

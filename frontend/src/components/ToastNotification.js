@@ -14,4 +14,3 @@ export const showErrorToast = (message) => {
     theme: 'colored',
   });
 };
-    

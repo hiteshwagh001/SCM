@@ -1,14 +1,10 @@
 package com.scm.config;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import com.scm.SecurityConfig.jwt.JwtUtils;
-import com.scm.SecurityConfig.services.UserDetailsImpl;
-import com.scm.model.AppRole;
-import com.scm.model.Providers;
-import com.scm.model.Role;
-import com.scm.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +18,15 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.scm.SecurityConfig.jwt.JwtUtils;
+import com.scm.SecurityConfig.services.UserDetailsImpl;
+import com.scm.model.AppRole;
+import com.scm.model.Providers;
+import com.scm.model.Role;
+import com.scm.model.User;
 import com.scm.repositories.RoleRepo;
 import com.scm.services.UserServices;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

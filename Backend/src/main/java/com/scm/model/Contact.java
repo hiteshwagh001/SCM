@@ -17,8 +17,8 @@ import java.util.List;
 public class Contact {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
     private String name;
     private String email;
     private String phoneNumber;

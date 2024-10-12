@@ -1,7 +1,5 @@
-import React from "react";
 import { Link, NavLink } from 'react-router-dom';
 import logo from "../../assets/logo.png";
-import useThemeClass from '../ThemeClass'
 
 
 const footer_links = [
@@ -24,9 +22,8 @@ const footer_links = [
 ]
 
 const Footer = () => {
-  const themeClass=useThemeClass()
   return (
-    <footer className={` rounded-lg shadow ${themeClass} `}>
+    <footer className={` rounded-lg shadow dark:bg-gradient-to-r from-slate-800 to-slate-900 light `}>
       <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <Link to="/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">

@@ -2,17 +2,18 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import { FaGithub, FaGoogle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import Button from '../fragments/Button';
 import Input from '../fragments/Input';
-import useThemeClass from '../ThemeClass';
+import { githubLogin, googleLogin } from '../Oauth2';
 import { showErrorToast, showSuccessToast } from '../ToastNotification';
-import {githubLogin,googleLogin} from '../Oauth2'
 
 function SignupForm() {
   const { register, handleSubmit, reset, setFocus, setError, formState: { errors } } = useForm();
   const [submitting, setSubmitting] = useState(false);
-  const themeClass = useThemeClass();
+  // const themeClass = useThemeClass();
+  const navigate=useNavigate();
 
   const signup = async (data) => {
     try {
@@ -25,6 +26,7 @@ function SignupForm() {
       console.log(response);
       if (response.status === 200) {
         showSuccessToast(response.data.message || 'Account created successfully!');
+        navigate("/login")
         reset();
       } else {
         showErrorToast(response.data.message || 'An error occurred during signup.');
@@ -35,7 +37,7 @@ function SignupForm() {
 
         // Display each field-specific error
         for (const [field, message] of Object.entries(errorData)) {
-          if (field !== 'message') {
+          if (field !== 'message') {``
             setError(field, { type: 'manual', message });
           }
         }
@@ -61,7 +63,7 @@ function SignupForm() {
 
   return (
     <>
-      <div className={`max-w-md mx-auto p-6 ${themeClass} border-t-8 pt-6 shadow-md`}>
+      <div className={`max-w-md mx-auto p-6 light border-t-8 pt-6 shadow-md dark:bg-gradient-to-r from-slate-800 to-slate-900 dark:text-darkText`}>
         <form onSubmit={handleSubmit(signup)} noValidate >
           <h2 className="text-2xl font-bold mb-2">Sign Up</h2>
           <p className='mb-6'>Managing contacts on cloud ....</p>

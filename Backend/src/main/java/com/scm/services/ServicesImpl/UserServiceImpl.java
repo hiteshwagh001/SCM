@@ -130,4 +130,10 @@ public class UserServiceImpl implements UserServices {
         userRepo.save(newUser);
     }
 
+    @Override
+    public Optional<User> getUserByUsername(String username) {
+        return userRepo.findByUserName(username);
+    }
+
+
 }

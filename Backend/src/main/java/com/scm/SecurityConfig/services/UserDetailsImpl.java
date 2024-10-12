@@ -25,14 +25,14 @@ public class UserDetailsImpl implements UserDetails {
     private String id;
     private String username;
     private String email;
-    private long phoneNumber;
+    private String phoneNumber;
 
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(String id, String username, String email, String password, long phoneNumber,
+    public UserDetailsImpl(String id, String username, String email, String password, String phoneNumber,
             Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;

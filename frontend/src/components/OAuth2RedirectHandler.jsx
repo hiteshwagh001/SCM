@@ -14,7 +14,7 @@ const OAuth2RedirectHandler = () => {
             localStorage.setItem('authToken', token);
 
             showSuccessToast('Login successful! Redirecting...');
-            navigate('/dashboard');  // Redirect to dashboard after login
+            navigate('/user/dashboard');  // Redirect to dashboard after login
         } else {
             showErrorToast('No token found in the URL');
             navigate('/login');  // Redirect to login page on failure

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.scm.forms.LoginForm;
 import com.scm.model.User;
 
+import javax.swing.text.html.Option;
+
 @Service
 public interface UserServices {
 
@@ -31,5 +33,6 @@ public interface UserServices {
 
     public void registerUser(User newUser);
 
+    Optional<User> getUserByUsername(String username);
 
 }

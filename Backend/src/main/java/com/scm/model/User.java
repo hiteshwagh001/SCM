@@ -59,11 +59,11 @@ public class User {
     private String about;
 
     @Column(name = "profile_pic", columnDefinition = "TEXT")
-    @Builder.Default
-    private String profilePic = "https://example.com/default_profile_pic.jpg";
+    // @Builder.Default
+    private String profilePic ;
 
     @Column(length = 10)
-    private long phoneNumber;
+    private String phoneNumber;
 
     // other properties
     @Builder.Default
@@ -79,7 +79,7 @@ public class User {
     // provider like self, google, github etc
     @Enumerated(value = EnumType.STRING)
     @Column(name = "provider")
-    @Builder.Default
+    // @Builder.Default
     private Providers provider = Providers.SELF;
 
     private String providerUserId;

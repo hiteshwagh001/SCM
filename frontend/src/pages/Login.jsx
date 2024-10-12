@@ -1,4 +1,3 @@
-import React from 'react'
 import Helmet from '../components/Helmet/Helmet'
 import Loginform from '../components/UI/Loginform'
 
