@@ -52,3 +52,13 @@ frontend:
 #   client-name: google
 #   client-id: 1090443459743-utfkjp8ju21mpbghfj05ve0l8ds2uvoq.apps.googleusercontent.com
 #   client-secrete: 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
+
+
+
+# cloudinay configurations
+
+cloudinary:
+  cloud:
+    name: doufhm6ro
+    key: 442541795778123
+    secret: PoxCrA3Xwf0C15ZzV0JPSbS3sbE

@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.13.0",
+    "@cloudinary/url-gen": "^1.21.0",
     "@reduxjs/toolkit": "^2.2.7",
     "@syncfusion/ej2-react-buttons": "^26.2.10",
     "@syncfusion/ej2-react-dropdowns": "^26.2.11",

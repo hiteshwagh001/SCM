@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import Helmet from '../components/Helmet/Helmet'
 import { useSelector } from 'react-redux'
+import Helmet from '../components/Helmet/Helmet'
 
 function NotFound() {
     const theme=useSelector(state=>state.theme.theme)

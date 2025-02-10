@@ -1,10 +1,7 @@
 package com.scm.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +14,8 @@ import java.util.List;
 public class Contact {
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private String id; // UUID will be assigned manually
+
     private String name;
     private String email;
     private String phoneNumber;
@@ -27,18 +24,19 @@ public class Contact {
 
     @Column(length = 10000)
     private String description;
-    private boolean favorite=false;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean favorite;
 
     private String websiteLink;
     private String linkedInLink;
-//    social media
-//    private List<SocialLinks> socialLinks = new ArrayList<SocialLinks>();
+    private String githubLink;
 
-    @ManyToOne()
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false) // Ensures a Contact always has a User
     private User user;
 
-    @OneToMany(mappedBy = "contact",cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
-    private List<SocialLink> socialLinks=new ArrayList<>();
-
-
+    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @Builder.Default
+    private List<SocialLink> socialLinks = new ArrayList<>();
 }

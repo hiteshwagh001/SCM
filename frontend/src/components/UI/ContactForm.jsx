@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Earth,
@@ -9,13 +10,11 @@ import {
   Mail,
   Phone,
   Star,
-  Twitter,
   X
 } from 'lucide-react';
 import { forwardRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { showErrorToast, showSuccessToast } from '../ToastNotification';
-import axios from 'axios';
 
 // Form field animation variants
 const fieldVariants = {
@@ -43,7 +42,7 @@ const AnimatedInput = motion(forwardRef(({ label, icon: Icon, error, ...props },
         border-gray-300 dark:border-gray-600
         focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
         transition-all duration-200
-        ${error ? 'border-red-500 dark:border-red-400' : ''}
+        ${error ? ' flex border-red-500 dark:border-red-400' : ''}
       `}
       {...props}
     />
@@ -97,8 +96,11 @@ const AnimatedTextarea = motion(forwardRef(({ label, icon: Icon, error, ...props
   </div>
 )));
 
+
+
 export default function ContactForm() {
   const [imagePreview, setImagePreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -109,75 +111,89 @@ export default function ContactForm() {
     reset
   } = useForm({
     defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      address: '',
-      description: '',
-      github: '',
-      website: '',
-      linkedin: ''
-    }
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      description: "",
+      github: "",
+      website: "",
+      linkedin: "",
+    },
   });
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      // alert('Please upload an image file');
+    if (!file.type.startsWith("image/")) {
       showErrorToast("Please upload an image file");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      // alert('File size should be less than 5MB');
-      showErrorToast("File size should be less than 5MB")
+      showErrorToast("File size should be less than 5MB");
       return;
     }
 
+    setSelectedFile(file);
+
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
+    reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file);
   };
 
   const removeImage = () => {
     setImagePreview(null);
+    setSelectedFile(null);
   };
-
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-    const token = localStorage.getItem('authToken'); // Get the token here
-  
+    const token = localStorage.getItem("authToken");
+
     try {
-      // Make the API request to the backend
-      const response = await axios.post('http://localhost:8080/api/contact/add-contact', {
-        ...data,
-        isFavorite,
-        imagePreview,
-      }, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-  
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("phone", data.phone);
+      formData.append("address", data.address);
+      formData.append("description", data.description);
+      formData.append("github", data.github);
+      formData.append("website", data.website);
+      formData.append("linkedin", data.linkedin);
+      formData.append("isFavorite", isFavorite);
+      if (selectedFile) {
+        formData.append("image", selectedFile);
+      }
+
+      const response = await axios.post(
+        "http://localhost:8080/api/contact/add-contact",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       if (response.status === 200) {
         showSuccessToast("Contact added successfully!");
         reset();
         setImagePreview(null);
+        setSelectedFile(null);
         setIsFavorite(false);
       } else {
         showErrorToast("Failed to add contact");
       }
     } catch (error) {
-      showErrorToast("Error adding contact");
+      showErrorToast("An error occurred while adding contact");
     } finally {
       setIsSubmitting(false);
     }
   };
+
   
 
   return (
@@ -196,13 +212,17 @@ export default function ContactForm() {
             Add New Contact
           </motion.h2>
 
+          {/* {message && <span className='text-red-500'>{message}</span>} */}
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <motion.div variants={fieldVariants} initial="hidden" animate="visible">
                 <AnimatedInput
                   label="Name"
                   icon={null}
-                  {...register("name", { required: "Name is required" })}
+                  {...register("name",
+                    { required: "Name is required !! " }
+                  )}
                   error={errors.name}
                   placeholder="John Doe"
                 />
@@ -232,13 +252,14 @@ export default function ContactForm() {
                   label="Phone Number"
                   icon={Phone}
                   {...register("phone", {
+                    required: "Phone number is required!!",
                     pattern: {
                       value: /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/,
                       message: "Invalid phone number"
                     }
                   })}
                   error={errors.phone}
-                  placeholder="+1 234 567 890"
+                  placeholder="1 234 567 890"
                 />
               </motion.div>
 
@@ -246,10 +267,12 @@ export default function ContactForm() {
                 <AnimatedTextarea
                   label="Address"
                   icon={Home}
-                  {...register("address")}
+                  {...register("address", { required: " Address is required!!" }
+                  )}
                   error={errors.address}
                   placeholder="Enter full address"
                   rows={1}
+
                 />
               </motion.div>
             </div>
@@ -257,7 +280,7 @@ export default function ContactForm() {
             <motion.div variants={fieldVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }}>
               <AnimatedTextarea
                 label="Description"
-                {...register("description")}
+                {...register("description", { required: " Description is required!!" })}
                 error={errors.description}
                 placeholder="Add a brief description about this contact..."
                 rows={3}

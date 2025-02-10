@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
-import UserLogout from '../fragments/UserLogout'
 import { toggleTheme } from '../../store/Slices/themeSlice';
+import UserLogout from '../fragments/UserLogout';
 
 
 const nav__links = [

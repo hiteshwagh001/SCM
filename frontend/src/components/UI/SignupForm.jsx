@@ -8,12 +8,14 @@ import Button from '../fragments/Button';
 import Input from '../fragments/Input';
 import { githubLogin, googleLogin } from '../Oauth2';
 import { showErrorToast, showSuccessToast } from '../ToastNotification';
+import ErrorHandler from '../utils/ErrorHandler';
 
 function SignupForm() {
-  const { register, handleSubmit, reset, setFocus, setError, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, setFocus, formState: { errors } } = useForm();
   const [submitting, setSubmitting] = useState(false);
+  const [message,setMessage] =useState(null)
   // const themeClass = useThemeClass();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const signup = async (data) => {
     try {
@@ -32,31 +34,16 @@ function SignupForm() {
         showErrorToast(response.data.message || 'An error occurred during signup.');
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        const errorData = error.response.data;
-
-        // Display each field-specific error
-        for (const [field, message] of Object.entries(errorData)) {
-          if (field !== 'message') {``
-            setError(field, { type: 'manual', message });
-          }
-        }
-        showErrorToast(errorData.message || "Please correct the errors in the form.");
-      } else if (error.response && error.response.status === 409) {
-        // Handle specific conflict errors (e.g., duplicate email)
-        const errorData = error.response.data;
-        setError('email', { type: 'manual', message: errorData.email });
-        showErrorToast(errorData.email || "An account with this email already exists.");
-      } else if (error.request) {
-        showErrorToast("No response received from the server.");
-      } else {
-        showErrorToast("An error occurred: " + error.message);
-      }
+      const errorMessage = ErrorHandler.handleError(error); // Use the custom error handler
+      // console.log("error :--- ", errorMessage)
+      setMessage(errorMessage);
+      showErrorToast(message || "Error during signup")
     } finally {
       setSubmitting(false);
       setFocus("userName");
     }
   };
+
   useEffect(() => {
     setFocus("userName");
   }, [setFocus]);

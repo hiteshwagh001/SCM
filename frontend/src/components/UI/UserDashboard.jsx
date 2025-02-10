@@ -40,7 +40,7 @@ const UserDashboard = () => {
             // console.log(error.code)
             // console.error("Internal server error", error);
             const errorMessage = ErrorHandler.handleError(error); // Use the custom error handler
-            console.log(errorMessage)
+            // console.log(errorMessage)
             setMessage(errorMessage);
             showErrorToast(errorMessage)
             // localStorage.removeItem('authToken')
@@ -102,7 +102,7 @@ const UserDashboard = () => {
                 )
                 : isAuthenticated ? (
                     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-                        {console.log(user)}
+                        {/* {console.log(user)} */}
                         <h1 className="text-3xl font-bold dark:text-darkText text-gray-900 mb-6">User Dashboard</h1>
 
                         {message && <p className="text-red-500 mb-4">{message}</p>}

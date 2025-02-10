@@ -45,7 +45,7 @@ public class SecurityConfig {
         // csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
         http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/auth/**", "/oauth2/**", "/api/**","/api/contact/**").permitAll()
+                .requestMatchers("/auth/**", "/oauth2/**", "/api/**").permitAll()
                 .anyRequest().authenticated());
 
         http.oauth2Login(oauth2 -> {

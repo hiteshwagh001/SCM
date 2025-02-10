@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,8 +67,19 @@ public class AuthController {
         return "hey";
     }
 
+    @PostMapping("/signup1")
+    public ResponseEntity<?> create(@Valid @RequestBody SignupRequest signupRequest){
+        return ResponseEntity.ok("here i am!!");
+    }
+
     @PostMapping("/signup")
-    public ResponseEntity<?> createNewUser(@Valid @RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<?> createNewUser(@Valid @RequestBody SignupRequest signupRequest ,BindingResult result) {
+        if (result.hasErrors()) {
+            // Returning validation errors if the form has issues
+            System.out.println("Errors from the form :   "+result.getAllErrors());
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(result.getAllErrors());
+        }
+
         if (userRepo.existsByEmail(signupRequest.getEmail()))
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email already exists!"));
 
@@ -105,7 +117,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication;
         try {
             authentication = authenticationManager

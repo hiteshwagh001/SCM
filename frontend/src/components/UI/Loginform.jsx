@@ -6,12 +6,13 @@ import { ToastContainer } from 'react-toastify';
 import Button from '../fragments/Button';
 import Input from '../fragments/Input';
 import { showErrorToast, showSuccessToast } from '../ToastNotification';
-
+import ErrorHandler from '../utils/ErrorHandler';
 
 function LoginForm() {
-  const { register, handleSubmit,setFocus, setError, formState: { errors } } = useForm();
+  const { register, handleSubmit, setFocus, formState: { errors } } = useForm();
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const [message, setMessage] = useState(null)
 
   const onSubmit = async (data) => {
     try {
@@ -20,38 +21,19 @@ function LoginForm() {
 
       // Handle success response
       if (response.status === 200) {
-        showSuccessToast("Login successful!");
+        setMessage("Logged in successfull !!!")
+        showSuccessToast(message || "Login successful!");
         const { jwtToken } = response.data;
         localStorage.setItem('authToken', jwtToken);
         navigate('/user/dashboard');
+      } else {
+        showErrorToast(response.data.message || 'An error occurred during login.');
       }
     } catch (error) {
-      // Handle cases based on error status code
-      if (error.response) {
-        const { status } = error.response;
-
-        // Handle 401 Unauthorized (Invalid credentials)
-        if (status === 401) {
-          setError("username", { type: 'manual', message: "Invalid credentials" });
-          setError("password", { type: 'manual', message: "Invalid credentials" });
-          showErrorToast("Invalid username or password.");
-        }
-        // Handle 403 Forbidden (User is disabled or not allowed to login)
-        else if (status === 403) {
-          showErrorToast("Account is disabled or forbidden access.");
-        }
-        // Handle 500 Internal Server Error (Server-side issue)
-        else if (status === 500) {
-          showErrorToast("Server error. Please try again later.");
-        }
-        // Handle other response errors
-        else {
-          showErrorToast("An unexpected error occurred. Status code: " + status);
-        }
-      } else {
-        // Handle errors not related to the server response (e.g., network errors)
-        showErrorToast("Network error: " + error.message);
-      }
+      const errorMessage = ErrorHandler.handleError(error); // Use the custom error handler
+      console.log("error :--- ", errorMessage)
+      setMessage(errorMessage || "error occured !!");
+      showErrorToast(message)
     } finally {
       // Reset submitting state and focus on the username field
       setSubmitting(false);
@@ -77,7 +59,6 @@ function LoginForm() {
               placeholder="Enter Username"
               name="username"
               type="text"
-              place
               {...register('username', { required: 'Username is required' })}
               className="border p-2 w-full"
             />

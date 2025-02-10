@@ -21,5 +21,5 @@ public interface ContactServices {
 
     List<Contact> searchContact(String name, String email, String phone);
 
-    Contact getByUserId(String userId);
+    List<Contact> getByUserId(String userId);
 }
